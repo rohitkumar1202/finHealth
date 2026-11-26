@@ -1,0 +1,338 @@
+{
+  "schemaVersion": 2,
+  "mode": "DEMO",
+  "profile": {
+    "household": "Alex & Priya Household",
+    "country": "Canada",
+    "province": "Ontario",
+    "currency": "CAD",
+    "adults": [
+      "Alex",
+      "Priya"
+    ],
+    "children": 2
+  },
+  "income": [
+    {
+      "name": "Alex employment income",
+      "person": "Alex",
+      "amount": 9500,
+      "frequency": "Monthly"
+    },
+    {
+      "name": "Priya employment income",
+      "person": "Priya",
+      "amount": 3833.33,
+      "frequency": "Monthly"
+    }
+  ],
+  "expenses": [
+    {
+      "category": "Housing",
+      "amount": 1900,
+      "frequency": "Monthly",
+      "essential": true
+    },
+    {
+      "category": "Groceries",
+      "amount": 750,
+      "frequency": "Monthly",
+      "essential": true
+    },
+    {
+      "category": "Transportation",
+      "amount": 450,
+      "frequency": "Monthly",
+      "essential": true
+    },
+    {
+      "category": "Utilities & internet",
+      "amount": 300,
+      "frequency": "Monthly",
+      "essential": true
+    },
+    {
+      "category": "Insurance",
+      "amount": 350,
+      "frequency": "Monthly",
+      "essential": true
+    },
+    {
+      "category": "Dining & entertainment",
+      "amount": 450,
+      "frequency": "Monthly",
+      "essential": false
+    },
+    {
+      "category": "Children & education",
+      "amount": 400,
+      "frequency": "Monthly",
+      "essential": true
+    },
+    {
+      "category": "Other",
+      "amount": 600,
+      "frequency": "Monthly",
+      "essential": true
+    }
+  ],
+  "assets": [
+    {
+      "name": "Alex TFSA",
+      "owner": "Alex",
+      "type": "Investments",
+      "value": 90000
+    },
+    {
+      "name": "Alex RRSP",
+      "owner": "Alex",
+      "type": "Investments",
+      "value": 70000
+    },
+    {
+      "name": "Priya TFSA",
+      "owner": "Priya",
+      "type": "Investments",
+      "value": 45000
+    },
+    {
+      "name": "Priya RRSP",
+      "owner": "Priya",
+      "type": "Investments",
+      "value": 35000
+    },
+    {
+      "name": "Non-registered portfolio",
+      "owner": "Household",
+      "type": "Investments",
+      "value": 80000
+    },
+    {
+      "name": "Cash & emergency savings",
+      "owner": "Household",
+      "type": "Cash",
+      "value": 25000
+    },
+    {
+      "name": "Home equity",
+      "owner": "Household",
+      "type": "Real estate",
+      "value": 175000
+    }
+  ],
+  "liabilities": [
+    {
+      "name": "Mortgage",
+      "value": 0
+    },
+    {
+      "name": "Other debt",
+      "value": 0
+    }
+  ],
+  "insurance": [
+    {
+      "type": "Life",
+      "person": "Alex",
+      "coverage": 500000,
+      "premium": 65,
+      "status": "Illustrative"
+    },
+    {
+      "type": "Life",
+      "person": "Priya",
+      "coverage": 500000,
+      "premium": 58,
+      "status": "Illustrative"
+    },
+    {
+      "type": "Home",
+      "person": "Household",
+      "coverage": 450000,
+      "premium": 110,
+      "status": "Illustrative"
+    }
+  ],
+  "investments": [
+    {
+      "name": "Broad-market ETF portfolio",
+      "account": "TFSA/RRSP/Non-registered",
+      "value": 320000,
+      "annualReturn": 7
+    },
+    {
+      "name": "Cash & GIC allocation",
+      "account": "Savings",
+      "value": 25000,
+      "annualReturn": 3
+    }
+  ],
+  "goals": {
+    "currentAge": 38,
+    "retirementAge": 60,
+    "retirementSpending": 54000,
+    "plannedAnnualContribution": 12000,
+    "inflation": 2.5,
+    "withdrawalRate": 3.5,
+    "expectedReturn": 7
+  },
+  "tax": {
+    "country": "Canada",
+    "province": "Ontario",
+    "taxYear": 2026
+  },
+  "estate": {
+    "deceased": "Alex",
+    "survivor": "Priya",
+    "children": 2,
+    "rrspValue": 170000,
+    "rrspTransferQualifies": true,
+    "nonRegisteredValue": 80000,
+    "nonRegisteredACB": 60000,
+    "otherProbateAssets": 270000,
+    "probateEstateUnplanned": 520000,
+    "probateEstatePlanned": 300000,
+    "spouseTransferQualifies": true,
+    "assumedEffectiveTaxRate": 40,
+    "assumedCapitalGainInclusion": 50,
+    "willStatus": "Review required",
+    "executor": "Not entered",
+    "guardians": "Not entered",
+    "beneficiaryReview": "Not reviewed",
+    "notes": "Fictional Ontario estate example. Confirm all beneficiary designations, spouse rollover eligibility, ownership and probate treatment with qualified professionals."
+  },
+  "marketNotes": [
+    {
+      "title": "Demo market observation",
+      "detail": "Fictional sample market observation. Not a live quote or news report."
+    }
+  ],
+  "history": [
+    {
+      "date": "2025-12-01",
+      "netWorth": 491400,
+      "investable": 334000,
+      "income": 13333,
+      "expenses": 5200,
+      "savingsRate": 61,
+      "healthScore": 81,
+      "fireProgress": 21.65
+    },
+    {
+      "date": "2026-01-01",
+      "netWorth": 494000,
+      "investable": 335000,
+      "income": 13333,
+      "expenses": 5200,
+      "savingsRate": 61,
+      "healthScore": 81,
+      "fireProgress": 21.71
+    },
+    {
+      "date": "2026-02-01",
+      "netWorth": 496600,
+      "investable": 336000,
+      "income": 13333,
+      "expenses": 5200,
+      "savingsRate": 61,
+      "healthScore": 81,
+      "fireProgress": 21.78
+    },
+    {
+      "date": "2026-03-01",
+      "netWorth": 499200,
+      "investable": 337000,
+      "income": 13333,
+      "expenses": 5200,
+      "savingsRate": 61,
+      "healthScore": 81,
+      "fireProgress": 21.84
+    },
+    {
+      "date": "2026-04-01",
+      "netWorth": 501800,
+      "investable": 338000,
+      "income": 13333,
+      "expenses": 5200,
+      "savingsRate": 61,
+      "healthScore": 81,
+      "fireProgress": 21.91
+    },
+    {
+      "date": "2026-05-01",
+      "netWorth": 504400,
+      "investable": 339000,
+      "income": 13333,
+      "expenses": 5200,
+      "savingsRate": 61,
+      "healthScore": 81,
+      "fireProgress": 21.97
+    },
+    {
+      "date": "2026-06-01",
+      "netWorth": 507000,
+      "investable": 340000,
+      "income": 13333,
+      "expenses": 5200,
+      "savingsRate": 61,
+      "healthScore": 81,
+      "fireProgress": 22.04
+    },
+    {
+      "date": "2026-07-01",
+      "netWorth": 509600,
+      "investable": 341000,
+      "income": 13333,
+      "expenses": 5200,
+      "savingsRate": 61,
+      "healthScore": 81,
+      "fireProgress": 22.1
+    },
+    {
+      "date": "2026-08-01",
+      "netWorth": 512200,
+      "investable": 342000,
+      "income": 13333,
+      "expenses": 5200,
+      "savingsRate": 61,
+      "healthScore": 81,
+      "fireProgress": 22.17
+    },
+    {
+      "date": "2026-09-01",
+      "netWorth": 514800,
+      "investable": 343000,
+      "income": 13333,
+      "expenses": 5200,
+      "savingsRate": 61,
+      "healthScore": 81,
+      "fireProgress": 22.23
+    },
+    {
+      "date": "2026-10-01",
+      "netWorth": 517400,
+      "investable": 344000,
+      "income": 13333,
+      "expenses": 5200,
+      "savingsRate": 61,
+      "healthScore": 81,
+      "fireProgress": 22.3
+    },
+    {
+      "date": "2026-11-01",
+      "netWorth": 520000,
+      "investable": 345000,
+      "income": 13333,
+      "expenses": 5200,
+      "savingsRate": 61,
+      "healthScore": 81,
+      "fireProgress": 22.36
+    }
+  ],
+  "settings": {
+    "theme": "light",
+    "emergencyFundMonths": 6,
+    "lastBackup": null
+  },
+  "investmentHistory": []
+}
