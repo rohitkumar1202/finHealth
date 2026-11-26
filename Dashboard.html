@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Personal Finance & Investment Platform V2.3</title>
+<title>Personal Finance & Investment Platform V2.6</title>
 <style>
 :root{color-scheme:light;--bg:#f3f5f9;--panel:#fff;--text:#182235;--muted:#68758a;--line:#e3e8f0;--accent:#2457c5;--soft:#edf3ff;--input:#fff;--good:#16845b;--warn:#a76a0b;--bad:#b93838}
 html[data-theme="dark"]{color-scheme:dark;--bg:#101722;--panel:#192434;--text:#e7edf7;--muted:#a4b1c3;--line:#344257;--accent:#83aaff;--soft:#253752;--input:#202d40;--good:#54d6a1;--warn:#f4c36b;--bad:#ff8989}
@@ -80,11 +80,19 @@ html[data-theme="dark"] .fire-card{background:#202b3a;border-color:#3b4a5e;color
 .api-provider{border:1px solid var(--line);border-radius:9px;padding:12px;min-width:220px;flex:1;background:var(--panel)}.api-provider b{display:block;margin-bottom:4px}.api-provider .api-meta{font-size:11px;color:var(--muted);margin:4px 0 8px}.api-provider input{margin-top:5px}
 @media(max-width:760px){.fire-grid,.visual-grid{grid-template-columns:1fr}.fire-card .fire-pct{font-size:30px}}
 
+
+/* V2.6: compact allocation donuts; legends retain their own readable space. */
+.visual-panel svg.pfip-donut-svg{width:165px;max-width:100%;height:auto;flex:0 1 165px;display:block}
+.visual-panel .visual-legend{flex:1 1 150px;min-width:140px}
+.visual-panel svg.pfip-donut-portfolio{width:160px;flex-basis:160px}
+@media(max-width:560px){.visual-panel svg.pfip-donut-svg{width:145px;flex-basis:145px}.visual-panel svg.pfip-donut-portfolio{width:140px;flex-basis:140px}}
+.sim-mode-panel{margin-top:14px}.sim-results{margin-top:14px}.sim-kicker{font-size:11px;color:var(--muted);margin-top:3px}
+
 </style>
 </head>
 <body>
 <header>
- <div><h1>Personal Finance & Investment Platform</h1><small>V2.3 · Offline-first household finance workspace</small></div>
+ <div><h1>Personal Finance & Investment Platform</h1><small>V2.6 · Offline-first household finance workspace</small></div>
  <div class="toolbar" style="margin:0">
   <span id="modeLabel" class="demo">DEMO MODE</span>
   <button class="secondary" id="themeToggle" onclick="toggleTheme()" title="Toggle light and dark theme">☾ Theme</button>
@@ -103,7 +111,7 @@ html[data-theme="dark"] .fire-card{background:#202b3a;border-color:#3b4a5e;color
   <button class="secondary" onclick="go('settings')">Settings</button>
  </div>
  <div id="content"></div>
- <footer>Offline-first household finance app. Demo household data is fictional. Markets and news require internet access and optional provider keys; quotes may be delayed or unavailable. Tax, Monte Carlo, transaction ledger and encrypted document vault modules are provided as planning tools; verify outputs and keep independent backups. Market data and API keys are stored separately from household JSON backups. Export backups regularly.</footer>
+ <footer>Offline-first household finance app. Demo household data is fictional. Markets and news require internet access and optional provider keys; quotes may be delayed or unavailable. Tax, Monte Carlo, transaction ledger and encrypted document vault modules are planning tools; verify outputs and keep independent backups. Household JSON backups exclude API keys and the separate encrypted vault. Export backups regularly.</footer>
 </main>
 </div>
 <script>
@@ -266,11 +274,11 @@ function selectedSnapshot(){
  const d=document.getElementById("viewDate")?.value;
  return data.history.find(x=>x.date===d)||null;
 }
-function svgDonut(values,labels){
+function svgDonut(values,labels,variant="dashboard"){
  const total=values.reduce((a,b)=>a+b,0);if(total<=0)return `<p class="small muted">Add asset values to see the allocation chart.</p>`;
  const colors=['#3478d4','#28a879','#e6a23c','#8b6bd6','#d66b83','#6b879f'];let angle=-90,paths='';
  values.forEach((v,i)=>{if(v<=0)return;const sweep=v/total*360,a1=angle*Math.PI/180,a2=(angle+sweep)*Math.PI/180,cx=110,cy=105,r=76,ri=46;const x1=cx+r*Math.cos(a1),y1=cy+r*Math.sin(a1),x2=cx+r*Math.cos(a2),y2=cy+r*Math.sin(a2),ix2=cx+ri*Math.cos(a2),iy2=cy+ri*Math.sin(a2),ix1=cx+ri*Math.cos(a1),iy1=cy+ri*Math.sin(a1),large=sweep>180?1:0;paths+=`<path d="M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} L ${ix2} ${iy2} A ${ri} ${ri} 0 ${large} 0 ${ix1} ${iy1} Z" fill="${colors[i%colors.length]}"/>`;angle+=sweep;});
- return `<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><svg viewBox="0 0 220 210" role="img" aria-label="Asset allocation donut chart">${paths}<text x="110" y="101" text-anchor="middle" font-size="11" fill="var(--muted)">Total assets</text><text x="110" y="120" text-anchor="middle" font-size="13" font-weight="700" fill="var(--text)">${money(total)}</text></svg><div class="visual-legend">${labels.map((l,i)=>`<span><i style="background:${colors[i%colors.length]}"></i>${html(l)} · ${(values[i]/total*100).toFixed(1)}%</span>`).join('')}</div></div>`;
+ return `<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><svg class="pfip-donut-svg pfip-donut-${variant}" viewBox="0 0 220 210" role="img" aria-label="Asset allocation donut chart">${paths}<text x="110" y="101" text-anchor="middle" font-size="11" fill="var(--muted)">Total assets</text><text x="110" y="120" text-anchor="middle" font-size="13" font-weight="700" fill="var(--text)">${money(total)}</text></svg><div class="visual-legend">${labels.map((l,i)=>`<span><i style="background:${colors[i%colors.length]}"></i>${html(l)} · ${(values[i]/total*100).toFixed(1)}%</span>`).join('')}</div></div>`;
 }
 function overviewVisuals(){
  const groups=['Investments','Cash','Real estate','Other'],vals=groups.map(t=>data.assets.filter(a=>a.type===t).reduce((sum,a)=>sum+n(a.value),0));
@@ -363,27 +371,71 @@ function investmentsPage(){
  ${table(["Holding","Account","Current value","Cost basis","Assumed return %","Action"],rows)}
  <button onclick="add('investments',{name:'New holding',account:'',value:0,costBasis:null,annualReturn:0})">Add holding</button>
  <div class="grid">${card("Portfolio value",money(value),"Current values entered")}${card("Total cost basis",complete?money(cost):"Incomplete","Enter cost basis for every holding")}${card("Unrealized gain / loss",complete?money(gain):"N/A",complete&&cost?((gain/cost)*100).toFixed(2)+"% return":"Cannot calculate until cost basis is complete")}${card("Holdings",String(data.investments.length),"Excludes non-investment assets")}</div>
- <section class="visual-panel"><h3>Portfolio holdings distribution</h3><div class="sub">Allocation by holding based on user-entered market values</div>${svgDonut(data.investments.map(x=>n(x.value)),data.investments.map(x=>x.name))}</section>
+ <section class="visual-panel"><h3>Portfolio holdings distribution</h3><div class="sub">Allocation by holding based on user-entered market values</div>${svgDonut(data.investments.map(x=>n(x.value)),data.investments.map(x=>x.name),"portfolio")}</section>
  <div class="notice">Current values and cost bases remain user-entered. The ledger below records activity and calculates money-weighted return from external cash flows. Time-weighted return is an approximation using dated valuation snapshots and Modified Dietz subperiods.</div>
  ${transactionLedgerHTML()}
  ${valuationLedgerHTML()}
  ${portfolioPerformanceHTML()}`;
 }
-function simulatorPage(){return `<h2>Investment Simulator</h2><p class="muted">Monthly compounding; contributions added at month-end. Constant-return illustration, not a forecast.</p>
- <div class="formrow">
- <label>Initial investment<input id="si" type="number" value="10000"></label>
- <label>Monthly contribution<input id="sm" type="number" value="500"></label>
- <label>Annual return %<input id="sr" type="number" value="7" step=".1"></label>
- <label>Years<input id="sy" type="number" value="20"></label>
- <label>Inflation %<input id="sf" type="number" value="2.5" step=".1"></label>
- </div><button onclick="simulate()">Calculate</button><div id="simout"></div>`}
-function simulate(){
- const p=n(si.value),m=n(sm.value),r=n(sr.value)/1200,y=Math.max(0,Math.min(100,n(sy.value))),inf=n(sf.value)/100;
- let v=p,rows="";
- for(let yr=1;yr<=y;yr++){for(let j=0;j<12;j++){v*=1+r;v+=m}
- rows+=`<tr><td>${yr}</td><td>${money(v)}</td><td>${money(v/Math.pow(1+inf,yr))}</td></tr>`}
- const invested=p+m*12*y;
- simout.innerHTML=`<div class="grid">${card("Future value",money(v))}${card("Invested",money(invested))}${card("Growth",money(v-invested))}${card("Today's dollars",money(v/Math.pow(1+inf,y)))}</div>${table(["Year","Future value","Inflation-adjusted"],rows)}`;
+function simulatorPage(){return `<h2>Investment Simulator</h2><p class="muted">Compare accumulation, retirement withdrawals and a three-bucket retirement drawdown using monthly calculations. These are deterministic illustrations, not forecasts or guarantees.</p>
+ <section class="panel"><div class="formrow"><label>Simulation type<select id="simMode" onchange="switchSimMode(this.value)"><option value="sip">SIP · Build a portfolio</option><option value="swp">SWP · Withdraw from a corpus</option><option value="buckets">3-Bucket Retirement Strategy</option></select></label></div>
+ <div id="simSipPanel" class="sim-mode-panel">
+  <h3>SIP – Systematic Investment Plan</h3><p class="small muted">Initial investment plus a fixed monthly contribution. Monthly contributions are added at month-end.</p>
+  <div class="formrow"><label>Initial investment (${data.profile.currency})<input id="sipInitial" type="number" min="0" step="100" value="10000"></label><label>Monthly SIP (${data.profile.currency})<input id="sipMonthly" type="number" min="0" step="25" value="500"></label><label>Expected annual return %<input id="sipReturn" type="number" step=".1" value="7"></label><label>Period (years)<input id="sipYears" type="number" min="1" max="60" value="20"></label><label>Inflation %<input id="sipInflation" type="number" min="0" max="30" step=".1" value="2.5"></label></div>
+  <button onclick="simulateSIP()">Calculate SIP</button><div id="sipOutput" class="sim-results" aria-live="polite"></div>
+ </div>
+ <div id="simSwpPanel" class="sim-mode-panel hidden">
+  <h3>SWP – Systematic Withdrawal Plan</h3><p class="small muted">Monthly withdrawals are taken at month-end after that month's investment return. The annual withdrawal increase is applied at the start of each year.</p>
+  <div class="formrow"><label>Starting corpus (${data.profile.currency})<input id="swpCorpus" type="number" min="0" step="1000" value="1000000"></label><label>Monthly withdrawal (${data.profile.currency})<input id="swpMonthly" type="number" min="0" step="100" value="5000"></label><label>Expected annual return %<input id="swpReturn" type="number" step=".1" value="6"></label><label>Period (years)<input id="swpYears" type="number" min="1" max="60" value="25"></label><label>Inflation %<input id="swpInflation" type="number" min="0" max="30" step=".1" value="2.5"></label><label>Annual withdrawal increase %<input id="swpIncrease" type="number" min="0" max="30" step=".1" value="2.5"></label></div>
+  <button onclick="simulateSWP()">Calculate SWP</button><div id="swpOutput" class="sim-results" aria-live="polite"></div>
+ </div>
+ <div id="simBucketsPanel" class="sim-mode-panel hidden">
+  <h3>3-Bucket Retirement Strategy</h3><p class="small muted">Bucket 1: cash/liquidity · Bucket 2: stability/income · Bucket 3: long-term growth. Withdrawals are paid from Bucket 1, then Bucket 2, then Bucket 3. At each replenishment date, Bucket 1 is refilled toward its initial target from Bucket 2, then Bucket 3.</p>
+  <div class="formrow"><label>Total retirement corpus (${data.profile.currency})<input id="bCorpus" type="number" min="0" step="10000" value="1500000"></label><label>Initial monthly withdrawal (${data.profile.currency})<input id="bMonthly" type="number" min="0" step="100" value="5000"></label><label>Retirement period (years)<input id="bYears" type="number" min="1" max="60" value="30"></label><label>Inflation / annual withdrawal increase %<input id="bInflation" type="number" min="0" max="30" step=".1" value="2.5"></label><label>Replenishment frequency (months)<select id="bFrequency"><option value="6">Every 6 months</option><option value="12" selected>Every 12 months</option><option value="18">Every 18 months</option><option value="24">Every 24 months</option></select></label></div>
+  <h4>Allocation and expected annual returns</h4>
+  <div class="formrow"><label>Bucket 1 allocation %<input id="bAlloc1" type="number" min="0" max="100" step="1" value="10"></label><label>Bucket 1 return %<input id="bReturn1" type="number" step=".1" value="2.5"></label><label>Bucket 2 allocation %<input id="bAlloc2" type="number" min="0" max="100" step="1" value="25"></label><label>Bucket 2 return %<input id="bReturn2" type="number" step=".1" value="4.5"></label><label>Bucket 3 allocation %<input id="bAlloc3" type="number" min="0" max="100" step="1" value="65"></label><label>Bucket 3 return %<input id="bReturn3" type="number" step=".1" value="7.5"></label></div>
+  <button onclick="simulateBuckets()">Calculate 3-Bucket Strategy</button><div id="bucketOutput" class="sim-results" aria-live="polite"></div>
+  <div class="notice small">Model assumptions: constant annual returns converted to monthly rates; no taxes, fees, transaction costs or market volatility. Replenishment is a transfer between buckets, not a new contribution. Actual results depend on return sequence and withdrawal timing.</div>
+ </div></section>`}
+function switchSimMode(mode){const ids={sip:"simSipPanel",swp:"simSwpPanel",buckets:"simBucketsPanel"};Object.entries(ids).forEach(([k,id])=>{const el=document.getElementById(id);if(el)el.classList.toggle("hidden",k!==mode)});}
+function simValue(id){const el=document.getElementById(id);return el?Number(el.value):NaN;}
+function simRead(ids){const out={};for(const id of ids)out[id]=simValue(id);return out;}
+function simValid(values,years){if(Object.values(values).some(v=>!Number.isFinite(v))||years<1||years>60)return false;return true;}
+function simRate(annualPercent){return Math.pow(1+annualPercent/100,1/12)-1;}
+function simSummaryCards(items){return `<div class="grid">${items.map(([a,b,c])=>card(a,b,c||"" )).join("")}</div>`;}
+function simulateSIP(){
+ const x=simRead(["sipInitial","sipMonthly","sipReturn","sipYears","sipInflation"]),out=document.getElementById("sipOutput");
+ if(!simValid(x,x.sipYears)||x.sipInitial<0||x.sipMonthly<0||x.sipReturn<=-100||x.sipInflation<0||x.sipInflation>=100){out.innerHTML='<p class="bad">Check inputs: amounts must be non-negative, annual return must exceed -100%, inflation must be 0–99%, and period must be 1–60 years.</p>';return;}
+ let balance=x.sipInitial,invested=x.sipInitial,rows="";const mr=simRate(x.sipReturn);
+ for(let year=1;year<=x.sipYears;year++){for(let m=0;m<12;m++){balance*=1+mr;balance+=x.sipMonthly;invested+=x.sipMonthly;}rows+=`<tr><td>${year}</td><td>${money(invested)}</td><td>${money(balance)}</td><td>${money(balance-invested)}</td><td>${money(balance/Math.pow(1+x.sipInflation/100,year))}</td></tr>`;}
+ const real=balance/Math.pow(1+x.sipInflation/100,x.sipYears);out.innerHTML=simSummaryCards([["Projected value",money(balance),"Nominal ending balance"],["Total invested",money(invested),"Initial amount + monthly SIPs"],["Estimated growth",money(balance-invested),"Before tax and fees"],["Value in today's dollars",money(real),"Inflation-adjusted ending value"]])+table(["Year","Cumulative invested","Projected value","Growth","Real value"],rows)+`<p class="sim-kicker">Assumption: fixed monthly contribution at month-end; annual return compounded monthly at an equivalent effective monthly rate.</p>`;
+}
+function simulateSWP(){
+ const x=simRead(["swpCorpus","swpMonthly","swpReturn","swpYears","swpInflation","swpIncrease"]),out=document.getElementById("swpOutput");
+ if(!simValid(x,x.swpYears)||x.swpCorpus<0||x.swpMonthly<0||x.swpReturn<=-100||x.swpInflation<0||x.swpInflation>=100||x.swpIncrease<0||x.swpIncrease>=100){out.innerHTML='<p class="bad">Check inputs: corpus and withdrawal must be non-negative, return must exceed -100%, increases must be 0–99%, and period must be 1–60 years.</p>';return;}
+ let balance=x.swpCorpus,total=0,depletionMonth=null,rows="",monthly=x.swpMonthly;const mr=simRate(x.swpReturn),annual=[];
+ for(let year=1;year<=x.swpYears;year++){if(year>1)monthly*=1+x.swpIncrease/100;let withdrawnYear=0;for(let m=1;m<=12;m++){balance*=1+mr;const w=Math.min(balance,monthly);balance-=w;total+=w;withdrawnYear+=w;if(w+1e-8<monthly&&depletionMonth===null)depletionMonth=(year-1)*12+m;if(balance<=1e-8){balance=0;if(depletionMonth===null)depletionMonth=(year-1)*12+m;}}
+ annual.push({year,balance,withdrawnYear});rows+=`<tr><td>${year}</td><td>${money(monthly)}</td><td>${money(withdrawnYear)}</td><td>${money(balance)}</td><td>${money(balance/Math.pow(1+x.swpInflation/100,year))}</td></tr>`;if(balance===0){for(let later=year+1;later<=x.swpYears;later++)rows+=`<tr><td>${later}</td><td>${money(monthly*Math.pow(1+x.swpIncrease/100,later-year))}</td><td>${money(0)}</td><td>${money(0)}</td><td>${money(0)}</td></tr>`;break;}}
+ const real=balance/Math.pow(1+x.swpInflation/100,x.swpYears),status=depletionMonth?`Depleted in month ${depletionMonth} (year ${Math.ceil(depletionMonth/12)})`:`Corpus remains after ${x.swpYears} years`;
+ out.innerHTML=simSummaryCards([["Ending corpus",money(balance),status],["Total withdrawals",money(total),"Nominal cumulative withdrawals"],["Ending corpus in today's dollars",money(real),"Inflation-adjusted"],["Depletion status",depletionMonth?`Month ${depletionMonth}`:"Not depleted","Under the selected assumptions"]])+table(["Year","Monthly withdrawal","Withdrawn that year","Remaining corpus","Real corpus"],rows)+`<p class="sim-kicker">Withdrawals increase by ${x.swpIncrease.toFixed(1)}% at each year boundary. The real-value calculation uses the separate inflation assumption.</p>`;
+}
+function simulateBuckets(){
+ const x=simRead(["bCorpus","bMonthly","bYears","bInflation","bAlloc1","bReturn1","bAlloc2","bReturn2","bAlloc3","bReturn3","bFrequency"]),out=document.getElementById("bucketOutput");
+ const alloc=x.bAlloc1+x.bAlloc2+x.bAlloc3;
+ if(!simValid(x,x.bYears)||x.bCorpus<0||x.bMonthly<0||x.bInflation<0||x.bInflation>=100||[x.bAlloc1,x.bAlloc2,x.bAlloc3].some(v=>v<0||v>100)||Math.abs(alloc-100)>.001||[x.bReturn1,x.bReturn2,x.bReturn3].some(v=>v<=-100)||![6,12,18,24].includes(x.bFrequency)){out.innerHTML='<p class="bad">Check inputs: allocations must add to exactly 100%, each allocation must be 0–100%, returns must exceed -100%, inflation must be 0–99%, and period must be 1–60 years.</p>';return;}
+ const targets=[x.bCorpus*x.bAlloc1/100,x.bCorpus*x.bAlloc2/100,x.bCorpus*x.bAlloc3/100],b=targets.slice(),rates=[x.bReturn1,x.bReturn2,x.bReturn3].map(simRate);let totalWithdrawn=0,depletionMonth=null,rows="",annualWithdrawals=0,monthly=x.bMonthly,withdrawnNominal=0,withdrawnReal=0;
+ for(let month=1;month<=x.bYears*12;month++){
+  for(let k=0;k<3;k++)b[k]*=1+rates[k];
+  if(month>1&&(month-1)%12===0)monthly*=1+x.bInflation/100;
+  let need=monthly,paid=0;for(let k=0;k<3&&need>1e-8;k++){const take=Math.min(b[k],need);b[k]-=take;need-=take;paid+=take;}
+  totalWithdrawn+=paid;annualWithdrawals+=paid;withdrawnNominal+=paid;withdrawnReal+=paid/Math.pow(1+x.bInflation/100,(month-1)/12);
+  if(need>1e-7&&depletionMonth===null)depletionMonth=month;
+  if(month%x.bFrequency===0&&month<x.bYears*12&&b[0]<targets[0]){let topUp=targets[0]-b[0];for(const k of [1,2]){const moved=Math.min(b[k],topUp);b[k]-=moved;b[0]+=moved;topUp-=moved;if(topUp<=1e-8)break;}}
+  if(month%12===0||month===x.bYears*12){const yr=Math.ceil(month/12),total=b.reduce((a,v)=>a+v,0);rows+=`<tr><td>${yr}</td><td>${money(annualWithdrawals)}</td><td>${money(b[0])}</td><td>${money(b[1])}</td><td>${money(b[2])}</td><td>${money(total)}</td></tr>`;annualWithdrawals=0;}
+  if(b.every(v=>v<=1e-8)&&depletionMonth===null)depletionMonth=month;
+ }
+ const remaining=b.reduce((a,v)=>a+v,0),realRemaining=remaining/Math.pow(1+x.bInflation/100,x.bYears),initialRows=targets.map((v,i)=>`<tr><td>Bucket ${i+1}</td><td>${["Cash / liquidity","Stability / income","Long-term growth"][i]}</td><td>${x[["bAlloc1","bAlloc2","bAlloc3"][i]]}%</td><td>${money(v)}</td><td>${x[["bReturn1","bReturn2","bReturn3"][i]].toFixed(1)}%</td></tr>`).join("");
+ out.innerHTML=simSummaryCards([["Remaining corpus",money(remaining),"After the selected retirement period"],["Total withdrawals",money(totalWithdrawn),"Nominal total paid out"],["Withdrawals in today's dollars",money(withdrawnReal),"Inflation-adjusted sum of monthly withdrawals"],["Depletion status",depletionMonth?`Month ${depletionMonth}`:"Not depleted","Shortfall begins if the required withdrawal exceeds available assets"]])+`<h4>Initial bucket allocation</h4>${table(["Bucket","Role","Allocation","Initial amount","Assumed return"],initialRows)}<h4>Year-end bucket balances</h4>${table(["Year","Withdrawals","Bucket 1","Bucket 2","Bucket 3","Total remaining"],rows)}<p class="sim-kicker">Remaining corpus in today's dollars: ${money(realRemaining)}. Transfers refill Bucket 1 toward its original target from Bucket 2 first, then Bucket 3. A withdrawal shortfall is not counted as paid.</p>`;
 }
 function firePage(){const g=data.goals;return `<h2>FIRE & Retirement Planner</h2>
  <div class="grid">${card("FIRE target",money(fireTarget()))}${card("Investable assets",money(investable()))}${card("FIRE progress",fireProgress().toFixed(1)+"%")}${card("Coast FIRE today",money(coastTarget()))}</div>
@@ -536,9 +588,12 @@ function settingsPage(){
  <div class="small muted">Get keys: <a href="https://twelvedata.com/" target="_blank" rel="noopener">Twelve Data</a> · <a href="https://fred.stlouisfed.org/docs/api/api_key.html" target="_blank" rel="noopener">FRED</a> · <a href="https://currentsapi.services/" target="_blank" rel="noopener">Currents</a></div>
  <div class="formrow"><button class="secondary" id="toggleApiVisibility" type="button" onclick="toggleApiKeyVisibility()">Show keys</button><button class="secondary" type="button" onclick="saveProviderKeys()">Save all API keys</button><span id="providerKeyStatus" class="small muted" aria-live="polite">${(api.twelve||api.fred||api.currents)?'Saved keys are loaded from this browser.':'No API keys saved yet.'}</span></div>
  <p class="small muted">Security: keys are stored in browser localStorage, not encrypted. Anyone with access to this browser profile can inspect them. Provider quotas, CORS and free-tier restrictions may apply.</p>`) }
- ${panel("Backup and data privacy",`<p>Storage: local browser storage. Last backup: ${html(s.lastBackup||"Not recorded")}</p>
- <div class="formrow"><button onclick="exportJSON()">Export full JSON</button><button class="secondary" onclick="document.getElementById('importFile').click()">Restore JSON</button><button class="danger" onclick="resetDemo()">Reset demo</button></div>
- <div class="notice">This build does not encrypt browser data. Anyone with access to this browser profile may be able to access the records. Do not enter passwords, full account numbers or sensitive identity documents. Keep backups in a secure location.</div>`)}
+ ${panel("Snapshot & backup management",`<p><b>Financial snapshot</b> saves a dated point-in-time summary to your PFIP history: net worth, investable assets, income, expenses, savings rate, Financial Health Score and FIRE progress. Saving again on the same date updates that day's snapshot.</p>
+ <div class="formrow"><button onclick="saveSnapshot()">Save financial snapshot</button><span class="small muted">${data.history.length} saved snapshot(s) · ${data.history.length?"Latest: "+html(data.history[data.history.length-1].date):"No snapshots saved yet"}</span></div>
+ ${data.history.length?table(["Date","Net worth","Investable","Health score","FIRE progress"],data.history.slice(-8).reverse().map(x=>`<tr><td>${html(x.date)}</td><td>${money(x.netWorth)}</td><td>${money(x.investable)}</td><td>${x.healthScore??"—"}</td><td>${n(x.fireProgress).toFixed(1)}%</td></tr>`).join("")):"<p class='small muted'>Your saved financial history will appear here.</p>"}
+ <hr style="border:0;border-top:1px solid var(--line);margin:16px 0"><p><b>Full household JSON backup</b> exports the PFIP data object so you can restore it later on this browser or another compatible copy of PFIP. It is separate from financial snapshots.</p><p>Last backup: ${html(s.lastBackup||"Not recorded")}</p>
+ <div class="formrow"><button onclick="exportJSON()">Export full JSON backup</button><button class="secondary" onclick="document.getElementById('importFile').click()">Restore JSON backup</button><button class="danger" onclick="resetDemo()">Reset demo</button></div>
+ <div class="notice">Household JSON backups do not include API keys or the separate encrypted document vault. API keys remain in browser localStorage and are not encrypted. The vault has its own encrypted backup feature. This build does not encrypt ordinary household browser data. Keep backups in a secure location.</div>`)}
  <button onclick="saveSettings()">Save settings</button>`;
 }
 function saveSettings(){
@@ -604,10 +659,11 @@ function render(){
  if(activeTab==="settings"){const c=document.getElementById("scountry");if(c)c.addEventListener("change",countryChanged)}
 }
 function exportJSON(){
+ data.settings.lastBackup=new Date().toISOString();save();
  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
  const a=document.createElement("a"),url=URL.createObjectURL(blob);
  a.href=url;a.download="Personal_Finance_Backup_"+new Date().toISOString().slice(0,10)+".json";a.click();
- URL.revokeObjectURL(url);data.settings.lastBackup=new Date().toISOString();save();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 async function importJSON(ev){
  const f=ev.target.files[0];if(!f)return;
