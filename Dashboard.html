@@ -285,6 +285,7 @@ function overview(){
  const p=Math.max(0,Math.min(100,v.fireProgress)),tiers=fireTierMetrics(),username=(data.profile.username||data.profile.adults?.[0]||data.profile.household||"there").trim();
  const fireCard=(name,m)=>`<div class="fire-card ${m.achieved?"achieved":""}"><div class="fire-name">${name}</div><div class="small muted" style="font-weight:700;margin-top:8px">Progress</div><div class="fire-pct">${m.progress.toFixed(0)}%</div><div class="progress"><span style="width:${m.progress}%"></span></div><div class="fire-away">${m.achieved?"Target achieved!":money(m.away)+" away"}</div></div>`;
  return `<section class="fire-welcome"><h2>Welcome back, ${html(username)}! 👋</h2><p>You're making progress toward financial independence. Here's where you stand today.</p><div class="fire-grid">${fireCard("Fat FIRE",tiers.fat)}${fireCard("Full FIRE",tiers.full)}${fireCard("Coast FIRE",tiers.coast)}</div><div class="fire-footnote">Illustrative planning figures only · Based on current investable assets, annual spending, withdrawal rate and expected return. Fat FIRE is modelled as 2× the Full FIRE target.</div></section>
+ <div class="card" style="margin-top:0"><div class="metric-label">Financial Health Score</div><div class="metric">${h?h.value+"/100":"N/A"}</div><b>${h?band(h.value):"Historical inputs unavailable"}</b><div class="progress"><span style="width:${h?h.value:0}%"></span></div><small class="muted">Prototype score; historical score uses that snapshot's stored inputs.</small></div>
  ${s?`<div class="notice">Viewing saved snapshot: ${html(s.date)}. Current records are not changed.</div>`:""}
  <div class="grid">
  ${card("Net worth",money(v.netWorth),"Assets less liabilities")}
@@ -293,7 +294,6 @@ function overview(){
  ${card("Monthly expenses",money(v.expenses))}
  </div>
  <div class="grid">
- <div class="card"><div class="metric-label">Financial Health Score</div><div class="metric">${h?h.value+"/100":"N/A"}</div><b>${h?band(h.value):"Historical inputs unavailable"}</b><div class="progress"><span style="width:${h?h.value:0}%"></span></div><small class="muted">Prototype score; historical score uses that snapshot's stored inputs.</small></div>
  ${card("Coast FIRE today",money(coastTarget()),"Uses assumed annual return")}
  ${card("Savings rate",savingsRate().toFixed(1)+"%","Current monthly cash flow")}
  ${card("Portfolio unrealized return",portfolioSummary().complete?money(portfolioSummary().gain):"N/A",portfolioSummary().complete?(portfolioSummary().percent===null?"Cost basis entered":"Return "+portfolioSummary().percent.toFixed(2)+"%") : "Enter cost basis for all holdings") }
