@@ -36,7 +36,7 @@ PFIP is intended for personal financial organization, analysis and planning. It 
 
 ### **How to open PFIP**
 
-1. Save the file `PFIP_V2_6_Complete_Integrated.html` to your computer.
+1. Save the file `Dashboard.html` to your computer.
 2. Locate the downloaded file.
 3. Double-click the HTML file or right-click and select your preferred browser.
 4. PFIP will open in your browser.
